@@ -92,6 +92,19 @@ Resources:
           Properties:
             Path: /todos/{id}
             Method: delete
+  GetTranslatedTodoFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/LabRole"
+      Handler: getTranslated.get
+      Runtime: python3.7
+      Events:
+        Create:
+          Type: Api
+          Properties:
+            Path: /todos/{id}/{lang}
+            Method: get
             
   TodosDynamoDbTable:
     Type: AWS::DynamoDB::Table
@@ -130,4 +143,7 @@ Outputs:
   DeleteTodoApi:
     Description: "API Gateway endpoint URL for ${opt:stage} stage for Delete TODO"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/todos/{id}"
+  GetTranslatedTodoApi:
+    Description: "API Gateway endpoint URL for ${opt:stage} stage for Get translated TODO"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/todos/{id}/{lang}"
 
